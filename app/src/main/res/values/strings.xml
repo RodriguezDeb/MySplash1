@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">MySplash</string>
+    <string name="label1">Contraseña</string>
+    <string name="inputPass">Contraseña</string>
+    <string name="usuario">Usuario</string>
+    <string name="label3">Usuario</string>
+    <string name="topText">¡Bienvenido!</string>
+    <string name="topText1">¿Ya tienes una cuenta?</string>
+    <string name="textNewUsu">¿Nuevo usuario? ¡Registrate aqui!</string>
+    <string name="label5">Registrarse</string>
+    <string name="textForgot">¿Olvidaste tu contraseña?</string>
+    <string name="boton1">Recuperar contraseña</string>
+
+    <string name="hi">¡Hola!</string>
+    <string name="hi1">¡Bienvenido de nuevo!</string>
+
+   <string name="boton2">Login</string>
+
+    <string name="usuario_label">Usuario</string>
+    <string name="password_label">Password</string>
+    <string name="olvcontraseña">Olvide mi contraseña</string>
+    <string name="login">Sign In</string>
+    <string name="registro">¡Registrame!</string>
+    <string name="email">Email</string>
+    <string name="HoJ">¿Prefiere la horchata o la jamaica?</string>
+    <string name="h">Horchata</string>
+    <string name="j">Jamaica</string>
+    <string name="Ninguna">Ninguna</string>
+    <string name="hombre">Hombre</string>
+    <string name="mujer">Mujer</string>
+    <string name="genero">Genero:</string>
+    <string name="fec_nac">Fecha de nacimiento</string>
+    <string name="in">Número celular</string>
+    <string name="notificaciones">Notificaciones</string>
+    <string name="region">Región</string>
+    <string name="name">Nombre</string>
+    <string name="pick">Buscar fecha</string>
+    <string name="w">Welcome to the jungle</string>
+    <string name="inicio_sesion">inicio_sesion</string>
+
+
+</resources>
