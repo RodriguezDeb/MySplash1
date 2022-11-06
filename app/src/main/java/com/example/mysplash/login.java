@@ -133,6 +133,7 @@ public class login extends AppCompatActivity {
             for(MyInfo myInfo : list){
                 if(myInfo.getUsuario().equals(usr)&&myInfo.getPassword().equals(pswd)){
                     Intent intent = new Intent(login.this, menu.class);
+                    intent.putExtra("MyInfo",myInfo);
                     startActivity(intent);
                     i=1;
                 }

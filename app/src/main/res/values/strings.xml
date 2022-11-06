@@ -37,6 +37,9 @@
     <string name="pick">Buscar fecha</string>
     <string name="w">Welcome to the jungle</string>
     <string name="inicio_sesion">inicio_sesion</string>
+    <string name="aja">Vacio</string>
+    <string name="bienvenido">¡Bienvenido!</string>
+    <string name="menu">Menú</string>
 
 
 </resources>
