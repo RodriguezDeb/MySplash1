@@ -8,34 +8,39 @@ import android.widget.TextView;
 
 import com.example.mysplash.json.MyInfo;
 
-public class menu extends AppCompatActivity {
-    private TextView user;
+public class menu extends AppCompatActivity
+{
+    private TextView textView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);}
+    protected void onCreate(Bundle savedInstanceState)
+    {
         String aux = null;
         MyInfo info = null;
         Object object = null;
-        user = findViewById(R.id.presId);
-                Intent intent = getIntent();
-                if( intent != null)
-                {
-                aux = intent.getStringExtra("Usuario" );
-                if( aux != null && aux.length()> 0 )
-                {
-                user.setText(aux);
-                }
-                if( intent.getExtras() != null ) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu);
+        textView = findViewById(R.id.presId);
+        Intent intent = getIntent();
+        if( intent != null)
+        {
+            aux = intent.getStringExtra("Usuario" );
+            if( aux != null && aux.length()> 0 )
+            {
+                textView.setText(aux);
+            }
+            if( intent.getExtras() != null ) {
                 object = intent.getExtras().get("MyInfo");
                 if (object != null) {
-                if (object instanceof MyInfo) {
-                info = (MyInfo) object;
-                user.setText("Hola " + info.getUsuario() + " edad= " + info.getSexo());
+                    if (object instanceof MyInfo) {
+                        info = (MyInfo) object;
+                        textView.setText("Bienvenido " + info.getUsuario());
+                    }
                 }
             }
         }
-     }
-   }
+    }
+
+
+
 }
