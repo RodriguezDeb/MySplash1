@@ -18,8 +18,8 @@
 
     <string name="usuario_label">Usuario</string>
     <string name="password_label">Password</string>
-    <string name="olvcontraseña">Olvide mi contraseña</string>
-    <string name="login">Sign In</string>
+    <string name="olvcontraseña">Recuperar contraseña</string>
+    <string name="login">Iniciar sesion</string>
     <string name="registro">¡Registrame!</string>
     <string name="email">Email</string>
     <string name="HoJ">¿Prefiere la horchata o la jamaica?</string>
@@ -40,6 +40,9 @@
     <string name="aja">Vacio</string>
     <string name="bienvenido">¡Bienvenido!</string>
     <string name="menu">Menú</string>
+    <string name="Recuperar">Recuperar</string>
+    <string name="agregar">Agregar contraseña</string>
+    <string name="cs">Cerrar Sesión</string>
 
 
 </resources>

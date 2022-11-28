@@ -1,19 +1,15 @@
 package com.example.mysplash;
 
-import static com.example.mysplash.registro.archivo;
-
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
 import androidx.core.util.PatternsCompat;
 
 import com.example.mysplash.json.MyInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -23,9 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Metodos {
-    public static final String TAG = "hola";
+    public static final String TAG = "Hola";
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-    //Metodos Sha1
+
+
     public static byte[] createSha1( String text )
     {
         MessageDigest messageDigest = null;
@@ -59,35 +56,35 @@ public class Metodos {
         }
         return new String(hexChars);
     }
-    //Metodos validacion
+
+
     public static boolean validarEmail(String email){
-        boolean bandera;
+        boolean fl;
         if(email.isEmpty()){
-            bandera=false;
+            fl=false;
         }else{
             if(PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()){
-                bandera=true;
+                fl=true;
             }else{
-                bandera=false;
+                fl=false;
             }
         }
-        return bandera;
+        return fl;
     }
-    public static boolean usuarios(List<MyInfo> list, String usr){
-        boolean bandera = false;
+    public static boolean usuarios(List<MyInfo> list, String usu,String correo){
+        boolean fl = false;
         for(MyInfo informacion : list){
-            if(informacion.getUsuario().equals(usr)){
-                bandera=true;
+            if(informacion.getUsuario().equals(usu)|| informacion.getCorreo().equals(correo)){
+                fl=true;
             }
         }
-        return bandera;
+        return fl;
     }
-    //Metodos JSON el getFile tiene bug
-    //Metodo de llenado
+
     public static void fillInfo(MyInfo info){
         info.setUsuario(registro.usr);
-        String pass = registro.password + registro.usr;
-        info.setPassword(bytesToHex(createSha1(pass)));
+        String pass = registro.password;
+        info.setPassword(pass);
         info.setCel(registro.numero);
         info.setDate(registro.fecha);
         info.setConocer(registro.box);
@@ -100,13 +97,14 @@ public class Metodos {
     public static void vaciaJson(String json){
         json = null;
     }
-    //Metodos encuentra contrasena
+
+
     public static void encuentra(String cadena){
         for(MyInfo info: forgot_pass.list){
             if(login.usr.equals(info.getUsuario())){
-                cadena = "El usuario existe pero la contraseña no";
+                cadena = "El usuario existe, recuerde la contraseña";
             }else{
-                cadena = "El usuario no existe mano";
+                cadena = "El usuario no existe, recuerde todo";
             }
         }
     }

@@ -19,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.example.mysplash.des.MyDesUtil;
+import com.example.mysplash.json.MyData;
 import com.example.mysplash.json.MyInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -44,18 +46,23 @@ public class registro extends AppCompatActivity implements View.OnClickListener 
     private RadioButton r1,r2;
     private int dia, mes , ano;
     private static final String TAG = "MainActivity";
-    public static final String archivo = "archivo.json";
+    public static final String archivo = "S.json";
     String json = null;
     public static String usr,password,email,numero,fecha,region,nom;
     public static boolean sw= false;
     public static boolean activado;
     public static String[] box = new String[3];
     public static List<MyInfo> list =new ArrayList<MyInfo>();
+    public static List<MyData> lista;
+    public static final String KEY = "+4xij6jQRSBdCymMxweza/uMYo+o0EUg";
+    public MyDesUtil myDesUtil= new MyDesUtil().addStringKeyBase64(KEY);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
-        //Declaracion de widgets
+        //Contraseñas nuevas
+        lista= new ArrayList<>();
+        MyData myData=null;
         spinner = findViewById(R.id.spinner);
         String [] opciones = {"Norte","Sur","Centro"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, opciones);
@@ -138,16 +145,17 @@ public class registro extends AppCompatActivity implements View.OnClickListener 
                             Metodos.fillInfo(info);
                             List2Json(info,list);
                         }else{
-                            if(Metodos.usuarios(list,usr)){
-                                Log.d(TAG,"esta ocupado");
-                                Toast.makeText(getApplicationContext(), "El nombre de usuario ya está en uso", Toast.LENGTH_LONG).show();
+                            if(Metodos.usuarios(list,usr,email)){
+                                Log.d(TAG,"esta ocupado mano");
+                                Toast.makeText(getApplicationContext(), "El nombre de usuario o correo, están ocupado, cambialo", Toast.LENGTH_LONG).show();
                             }else{
                                 Metodos.fillInfo(info);
+                                info.setContras(lista);
                                 List2Json(info,list);
                             }
                         }
                     }else{
-                        Toast.makeText(getApplicationContext(), "Llene el campo con un correo valido", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Introduzca un correo válido", Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -167,9 +175,11 @@ public class registro extends AppCompatActivity implements View.OnClickListener 
         else
         {
             Log.d(TAG, json);
+            json=myDesUtil.cifrar(json);
+            Log.d(TAG, json);
             writeFile(json);
         }
-        Toast.makeText(getApplicationContext(), "Se ha registrado con exito", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Ok", Toast.LENGTH_LONG).show();
     }
     private boolean writeFile(String text){
         File file =null;
@@ -195,6 +205,7 @@ public class registro extends AppCompatActivity implements View.OnClickListener 
     private File getFile(){
         return new File(getDataDir(),archivo);
     }
+
     public boolean Read(){
         if(!isFileExits()){
             return false;
@@ -207,6 +218,7 @@ public class registro extends AppCompatActivity implements View.OnClickListener 
             fileInputStream = new FileInputStream(file);
             fileInputStream.read(bytes);
             json=new String(bytes);
+            json= myDesUtil.desCifrar(json);
             Log.d(TAG,json);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
