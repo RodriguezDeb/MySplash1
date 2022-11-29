@@ -218,6 +218,7 @@ public class registro extends AppCompatActivity implements View.OnClickListener 
             fileInputStream = new FileInputStream(file);
             fileInputStream.read(bytes);
             json=new String(bytes);
+            Log.d(TAG,json);
             json= myDesUtil.desCifrar(json);
             Log.d(TAG,json);
         } catch (FileNotFoundException e) {
