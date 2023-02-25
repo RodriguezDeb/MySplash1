@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mysplash.MyAdapter.MyAdapter;
+import com.example.mysplash.Service.DbContra;
 import com.example.mysplash.des.MyDesUtil;
 import com.example.mysplash.json.MyData;
 import com.example.mysplash.json.MyInfo;
@@ -41,13 +42,14 @@ public class menu extends AppCompatActivity {
     public static String TAG = "mensaje";
     public static String json = null;
     private ListView listView;
-    private List<MyData> listo;
+    public List<MyData> listo;
     String aux;
     public boolean bandera = false;
     public int pos=0;
     public static MyInfo myInfo= null;
     EditText editText,editText1;
     Button button,button1,button2;
+    MyData data = new MyData();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +68,13 @@ public class menu extends AppCompatActivity {
                 }
             }
         }
-        list= new ArrayList<>();
-        list = login.list;
         editText=findViewById(R.id.editText1);
         editText1=findViewById(R.id.editText2);
         button=findViewById(R.id.buttonE);
         button1=findViewById(R.id.buttonM);
         button2=findViewById(R.id.buttonA);
+        DbContra dbContras = new DbContra(menu.this);
+        listo = dbContras.getContras(myInfo.getId_usr());
         listView = (ListView) findViewById(R.id.listViewId);
         listo = new ArrayList<MyData>();
         listo = myInfo.getContras();
@@ -80,16 +82,18 @@ public class menu extends AppCompatActivity {
         listView.setAdapter(myAdapter);
         button.setEnabled(false);
         button1.setEnabled(false);
-        if(listo.isEmpty()){
+        if(listo==null){
             Toast.makeText(getApplicationContext(), "Para agregar una contraseña de clic en el menú o en el boton +", Toast.LENGTH_LONG).show();
             Toast.makeText(getApplicationContext(), "Escriba en los campos", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), String.valueOf(myInfo.getId_usr()), Toast.LENGTH_LONG).show();
         }
         Toast.makeText(getApplicationContext(), "Para modificar o eliminar una contraseña de click en ella", Toast.LENGTH_LONG).show();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                editText.setText(listo.get(i).getUsuario());
-                editText1.setText(listo.get(i).getContra());
+                data = listo.get(i);
+                editText.setText(data.getUsuario());
+                editText1.setText(data.getContra());
                 pos=i;
                 button.setEnabled(true);
                 button1.setEnabled(true);
@@ -100,15 +104,20 @@ public class menu extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listo.remove(pos);
-                myInfo.setContras(listo);
-                MyAdapter myAdapter = new MyAdapter(listo, getBaseContext());
-                listView.setAdapter(myAdapter);
-                editText.setText("");
-                editText1.setText("");
-                Toast.makeText(getApplicationContext(), "Se eliminó la contraseña", Toast.LENGTH_LONG).show();
-                button.setEnabled(false);
-                button1.setEnabled(false);
+                DbContra dbContras = new DbContra(menu.this);
+                boolean id=dbContras.eliminarContacto(myInfo.getId_usr(),data.getUsuario(),data.getContra());
+                if(id){
+                    listo=dbContras.getContras(myInfo.getId_usr());
+                    MyAdapter myAdapter = new MyAdapter(listo, getBaseContext());
+                    listView.setAdapter(myAdapter);
+                    editText.setText("");
+                    editText1.setText("");
+                    Toast.makeText(getApplicationContext(), "Se eliminó la contraseña", Toast.LENGTH_LONG).show();
+                    button.setEnabled(false);
+                    button1.setEnabled(false);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Error al eliminar", Toast.LENGTH_LONG).show();
+                }
             }
         });
         button1.setOnClickListener(new View.OnClickListener() {
@@ -119,16 +128,20 @@ public class menu extends AppCompatActivity {
                 if(usr.equals("")||contra.equals("")){
                     Toast.makeText(getApplicationContext(), "Llene los campos", Toast.LENGTH_LONG).show();
                 }else{
-                    listo.get(pos).setUsuario(usr);
-                    listo.get(pos).setContra(contra);
-                    myInfo.setContras(listo);
-                    MyAdapter myAdapter = new MyAdapter(listo, getBaseContext());
-                    listView.setAdapter(myAdapter);
-                    editText.setText("");
-                    editText1.setText("");
-                    Toast.makeText(getApplicationContext(), "Se modificó la contraseña", Toast.LENGTH_LONG).show();
-                    button.setEnabled(false);
-                    button1.setEnabled(false);
+                    DbContra dbContras = new DbContra(menu.this);
+                    boolean id=dbContras.AlterContra(data.getUsuario(),data.getContra(),myInfo.getId_usr(),data.getId_contra());
+                    if(id){
+                        listo = dbContras.getContras(myInfo.getId_usr());
+                        MyAdapter myAdapter = new MyAdapter(listo, getBaseContext());
+                        listView.setAdapter(myAdapter);
+                        editText.setText("");
+                        editText1.setText("");
+                        Toast.makeText(getApplicationContext(), "Se modificó la contraseña", Toast.LENGTH_LONG).show();
+                        button.setEnabled(false);
+                        button1.setEnabled(false);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Error al modificar", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -143,12 +156,21 @@ public class menu extends AppCompatActivity {
                     MyData myData = new MyData();
                     myData.setContra(contra);
                     myData.setUsuario(usr);
-                    listo.add(myData);
-                    MyAdapter myAdapter = new MyAdapter(listo, getBaseContext());
-                    listView.setAdapter(myAdapter);
-                    editText.setText("");
-                    editText1.setText("");
-                    Toast.makeText(getApplicationContext(), "Se agregó la contraseña", Toast.LENGTH_LONG).show();
+                    myData.setId_usr(myInfo.getId_usr());
+                    Toast.makeText(getApplicationContext(), String.valueOf(myInfo.getId_usr()), Toast.LENGTH_LONG).show();
+                    DbContra dbContras = new DbContra(menu.this);
+                    long id=dbContras.saveContra(myData);
+                    if (id > 0){
+                        listo=dbContras.getContras(myInfo.getId_usr());
+                        MyAdapter myAdapter = new MyAdapter(listo, getBaseContext());
+                        listView.setAdapter(myAdapter);
+                        editText.setText("");
+                        editText1.setText("");
+                        Toast.makeText(getApplicationContext(), myData.getUsuario()+" "+myData.getContra(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(menu.this, "Guardado con éxito",Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(menu.this, "No se ha podido guardar",Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -175,24 +197,26 @@ public class menu extends AppCompatActivity {
                 MyData myData = new MyData();
                 myData.setContra(contra);
                 myData.setUsuario(usr);
-                listo.add(myData);
-                MyAdapter myAdapter = new MyAdapter(listo, getBaseContext());
-                listView.setAdapter(myAdapter);
-                editText.setText("");
-                editText1.setText("");
-                Toast.makeText(getApplicationContext(), "Se agregó la contraseña", Toast.LENGTH_LONG).show();
+                myData.setId_usr(myInfo.getId_usr());
+                Toast.makeText(getApplicationContext(), String.valueOf(myInfo.getId_usr()), Toast.LENGTH_LONG).show();
+                DbContra dbContras = new DbContra(menu.this);
+                long p=dbContras.saveContra(myData);
+                if (p > 0){
+                    listo=dbContras.getContras(myInfo.getId_usr());
+                    MyAdapter myAdapter = new MyAdapter(listo, getBaseContext());
+                    listView.setAdapter(myAdapter);
+                    editText.setText("");
+                    editText1.setText("");
+                    Toast.makeText(getApplicationContext(), myData.getUsuario()+" "+myData.getContra(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(menu.this, "Guardado con éxito",Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(menu.this, "No se ha podidio guardar",Toast.LENGTH_LONG).show();
+                }
             }
-            return true;
+
         }
         if(id==R.id.item2){
-            int i =0;
-            for(MyInfo inf : list){
-                if(myInfo.getUsuario().equals(inf.getUsuario())){
-                    list.get(i).setContras(listo);
-                }
-                i++;
-            }
-            List2Json(myInfo,list);
+            Toast.makeText(getApplicationContext(), "Es un secreto", Toast.LENGTH_LONG).show();
             return true;
         }
         if(id==R.id.item3){
@@ -202,46 +226,5 @@ public class menu extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    public void List2Json(MyInfo info,List<MyInfo> list){
-        Gson gson =null;
-        String json= null;
-        gson =new Gson();
-        json =gson.toJson(list, ArrayList.class);
-        if (json == null)
-        {
-            Log.d(TAG, "Error json");
-        }
-        else
-        {
-            Log.d(TAG, json);
-            json = myDesUtil.cifrar(json);
-            Log.d(TAG, json);
-            writeFile(json);
-        }
-        Toast.makeText(getApplicationContext(), "Ok", Toast.LENGTH_LONG).show();
-    }
-    private boolean writeFile(String text){
-        File file =null;
-        FileOutputStream fileOutputStream =null;
-        try{
-            file=getFile();
-            fileOutputStream = new FileOutputStream( file );
-            fileOutputStream.write( text.getBytes(StandardCharsets.UTF_8) );
-            fileOutputStream.close();
-            Log.d(TAG, "Hola");
-            return true;
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    private File getFile(){
-        return new File(getDataDir(),registro.archivo);
-    }
+
 }

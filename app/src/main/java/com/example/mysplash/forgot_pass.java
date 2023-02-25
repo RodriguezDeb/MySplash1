@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mysplash.Service.DbUsuarios;
 import com.example.mysplash.des.MyDesUtil;
 import com.example.mysplash.json.MyInfo;
 import com.google.gson.Gson;
@@ -34,6 +35,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class forgot_pass extends AppCompatActivity {
     public static List<MyInfo> list;
@@ -54,7 +56,7 @@ public class forgot_pass extends AppCompatActivity {
         email=findViewById(R.id.mail);
         button = findViewById(R.id.recuperar);
         button1 = findViewById(R.id.login);
-        list=login.list;
+        DbUsuarios dbUsuarios = new DbUsuarios(forgot_pass.this);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,42 +69,95 @@ public class forgot_pass extends AppCompatActivity {
             public void onClick(View view) {
                 usr = String.valueOf(usuario.getText());
                 correo= String.valueOf(email.getText());
+                MyInfo User = dbUsuarios.GetUsuario(usr,correo);
                 if(usr.equals("")&&email.equals("")){
                     Toast.makeText(getApplicationContext(), "Complete algún campo", Toast.LENGTH_LONG).show();
                 }else{
-                    int i=0;
-                    int j=0;
-                    for(MyInfo inf : list){
-                        if(inf.getUsuario().equals(usr) || inf.getCorreo().equals(correo)){
-                            correo=inf.getCorreo();
-                            String contra=inf.getPassword();
-                            String nueva = String.format("%d",(int)(Math.random()*1000));
-                            mensaje="<html><body><h1>Su contraseña era "+contra+" ahora es "+nueva+"</h1></body></html>";
-                            correo=myDesUtil.cifrar(correo);
-                            mensaje=myDesUtil.cifrar(mensaje);
-                            list.get(j).setPassword(nueva);
-                            Log.i(TAG,nueva);
-                            Log.i(TAG,list.get(j).getPassword());
-                            List2Json(list);
-                            i=1;
-                        }
-                        j++;
-                    }
-                    if(i==1){
-                        Log.i(TAG,usr);
-                        Log.i(TAG,correo);
-                        Log.i(TAG,mensaje);
-                        if( sendInfo( correo,mensaje ) )
-                        {
-                            Toast.makeText(getBaseContext() , "Se envío el texto" , Toast.LENGTH_LONG ).show();
-                            return;
-                        }
-                        Toast.makeText(getBaseContext() , "Error en el envío" , Toast.LENGTH_LONG ).show();
+                    if(User == null){
+                        Toast.makeText(getApplicationContext(), "El usuario o correo no existen", Toast.LENGTH_LONG).show();
                     }else{
-                        if(i==0){
-                            Log.i(TAG,"no hay usuarios");
-                            Toast.makeText(getBaseContext() , "No existen usuarios" , Toast.LENGTH_LONG ).show();
-                            return;
+                        correo=User.getCorreo();
+                        String contra=User.getPassword();
+                        String nueva = "";
+                        for (int i = 0; i < 5; i++) {
+                            Random random = new Random();
+                            char ch = (char) (random.nextInt(26) + 'a');
+                            nueva += String.valueOf(ch);
+                        }
+                        nueva += String.format("%d",(int)(Math.random()*1000));
+                        mensaje="<html>\n" +
+                                "    <head>\n" +
+                                "        <style>\n" +
+                                "            \n" +
+                                "\t\tbody{\n" +
+                                "\t\t\tbackground: #f7f9fc;\n" +
+                                "\t\t\tfont-family: Helvetica, Arial;\n" +
+                                "\t\t}\n" +
+                                "\t\t#wrapper \n" +
+                                "\t\t{\n" +
+                                "\t\t\tbackground: #ffffff;\n" +
+                                "\t\t\t-webkit-box-shadow: 0px 16px 46px -22px rgba(0,0,0,0.75);\n" +
+                                "\t\t\t-moz-box-shadow: 0px 16px 46px -22px rgba(0,0,0,0.75);\n" +
+                                "\t\t\tbox-shadow: 0px 16px 46px -22px rgba(0,0,0,0.75);\n" +
+                                "\t\t\t\n" +
+                                "\t\t\twidth: 300px;\n" +
+                                "\t\t\tpadding-bottom: 10px;\n" +
+                                "\t\t\t\n" +
+                                "\t\t\tmargin: -180px 0 0 -150px;\n" +
+                                "\t\t\tposition: absolute;\n" +
+                                "\t\t\ttop: 50%;\n" +
+                                "\t\t\tleft: 50%;\n" +
+                                "\t\t\t-webkit-border-radius: 5px;\n" +
+                                "\t\t\t-moz-border-radius: 5px;\n" +
+                                "\t\t\tborder-radius: 5px;\n" +
+                                "\t\t}\n" +
+                                "\t\tp{\n" +
+                                "\t\t\ttext-align: center;\n" +
+                                "\t\t}\n" +
+                                "\t\th2{\n" +
+                                "\t\t\tfont-weight: normal;\n" +
+                                "\t\t\ttext-align: center;\n" +
+                                "\t\t}\n" +
+                                "\t\ta{\n" +
+                                "\t\t\tcolor: #000;\n" +
+                                "\t\t\ttext-decoration: none;\n" +
+                                "\t\t}\n" +
+                                "\t\ta:hover{\n" +
+                                "\t\t\ttext-decoration: underline;\n" +
+                                "\t\t}\n" +
+                                "\t\t#top-pattern{\n" +
+                                "\t\t\tmargin-top: -8px;\n" +
+                                "\t\t\theight: 8px;\n" +
+                                "\t\t\tbackground: url(\"https://sendy.colorlib.com/img/top-pattern2.gif\") repeat-x 0 0;\n" +
+                                "\t\t\tbackground-size: auto 8px;\n" +
+                                "\t\t}\n" +
+                                "\t\n" +
+                                "\n" +
+                                "        </style>\n" +
+                                "    </head>\n" +
+                                "    <body>\n" +
+                                "        <div id=\"top-pattern\"></div>\n" +
+                                "        <div id=\"wrapper\">\n" +
+                                "\t\t\t<h2>Recupere su contraseña</h2>\n" +
+                                "            <h2>Su contraseña antigua era " +
+                                contra +
+                                " ahora es " +
+                                nueva +
+                                "</h2>\n" +
+                                "            <p><img src=\"https://sendy.colorlib.com/img/email-notifications/subscribed.gif\" height=\"150\"></p>\n" +
+                                "\t\t</div>\n" +
+                                "    </body>\n" +
+                                "</html>";
+                        correo=myDesUtil.cifrar(correo);
+                        mensaje=myDesUtil.cifrar(mensaje);
+                        boolean f = dbUsuarios.AlterUser(usr,nueva);
+                        if(f){
+                            if(sendInfo(correo,mensaje)){
+                                Toast.makeText(getApplicationContext(), "Se ha enviado una contraseña a su correo", Toast.LENGTH_LONG).show();
+                            }else{Toast.makeText(getApplicationContext(), "Error con sendinfo", Toast.LENGTH_LONG).show();}
+
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Error al enviar correo", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -150,76 +205,5 @@ public class forgot_pass extends AppCompatActivity {
 
         return true;
     }
-    public boolean Read(){
-        if(!isFileExits()){
-            return false;
-        }
-        File file = getFile();
-        FileInputStream fileInputStream = null;
-        byte[] bytes = null;
-        bytes = new byte[(int)file.length()];
-        try {
-            fileInputStream = new FileInputStream(file);
-            fileInputStream.read(bytes);
-            json=new String(bytes);
-            json= myDesUtil.desCifrar(json);
-            Log.d(TAG,json);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    private File getFile( )
-    {
-        return new File( getDataDir() , registro.archivo );
-    }
-    private boolean isFileExits( )
-    {
-        File file = getFile( );
-        if( file == null )
-        {
-            return false;
-        }
-        return file.isFile() && file.exists();
-    }
-    public void List2Json(List<MyInfo> list){
-        Gson gson =null;
-        String json= null;
-        gson =new Gson();
-        json =gson.toJson(list, ArrayList.class);
-        if (json == null)
-        {
-            Log.d(TAG, "Error json");
-        }
-        else
-        {
-            Log.d(TAG, json);
-            json=myDesUtil.cifrar(json);
-            Log.d(TAG, json);
-            writeFile(json);
-        }
-    }
-    private boolean writeFile(String text){
-        File file =null;
-        FileOutputStream fileOutputStream =null;
-        try{
-            file=getFile();
-            fileOutputStream = new FileOutputStream( file );
-            fileOutputStream.write( text.getBytes(StandardCharsets.UTF_8) );
-            fileOutputStream.close();
-            Log.d(TAG, "Hola");
-            return true;
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return false;
-    }
+
 }
