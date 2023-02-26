@@ -10,6 +10,7 @@
     <string name="label5">Registrarse</string>
     <string name="textForgot">¿Olvidaste tu contraseña?</string>
     <string name="boton1">Recuperar contraseña</string>
+    <string name="actDT">Date/Time</string>
 
     <string name="hi">¡Hola!</string>
     <string name="hi1">¡Bienvenido de nuevo!</string>

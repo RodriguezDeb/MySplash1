@@ -23,6 +23,9 @@
             android:name=".menu"
             android:exported="false" />
         <activity
+            android:name=".DestinationActivity1"
+            android:exported="false" />
+        <activity
             android:name=".registro"
             android:exported="false" />
         <activity
