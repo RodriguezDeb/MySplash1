@@ -122,6 +122,9 @@ public class forgot_pass extends AppCompatActivity {
                         }else{
                             Toast.makeText(getApplicationContext(), "Error al enviar correo", Toast.LENGTH_LONG).show();
                         }
+                        Intent intent2 = new Intent(forgot_pass.this, login2.class);
+                        intent2.putExtra("Contrasena", contra);
+                        startActivity(intent2);
                     }
                 }
             }

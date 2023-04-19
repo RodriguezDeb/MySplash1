@@ -15,7 +15,7 @@
     <string name="hi">¡Hola!</string>
     <string name="hi1">¡Bienvenido de nuevo!</string>
 
-   <string name="boton2">Login</string>
+    <string name="boton2">Login</string>
 
     <string name="usuario_label">Usuario</string>
     <string name="password_label">Password</string>
@@ -45,5 +45,16 @@
     <string name="agregar">Agregar contraseña</string>
     <string name="cs">Cerrar Sesión</string>
 
+    <string name="loc">Ubicación :</string>
+    <string name="img">Cambiar :</string>
+    <string name="c1">Contraseña correo</string>
+    <string name="c2">Nueva contraseña</string>
+    <string name="exp">Ingresa tu usuario, la contraseña enviada por correo, y la nueva contraseña que quieres utilizar</string>
+    <string name="v1">Volver al registro</string>
+    <string name="v2">Ingresar con nueva contraseña</string>
+    <string name="label2"> Usuario</string>
+    <string name="label4">RECUPERA TU CONTRASEÑA</string>
+    <string name="label7"> Contraseña del correo</string>
+    <string name="label6"> Contraseña nueva</string>
 
 </resources>
